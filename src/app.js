@@ -22,7 +22,7 @@ app.post("/repositories", (request, response) => {
     title,
     url,
     techs,
-    likes: 0
+    likes: 0,
   };
 
   repositories.push(repository);
@@ -33,9 +33,11 @@ app.put("/repositories/:id", (request, response) => {
   const { title, url, techs } = request.body;
   const { id } = request.params;
 
-  const repository = repositories.findIndex(repo => repo.id === id);
+  //if (repositories.length === 0) return response.status(400).send();
+  const repository = repositories.findIndex((repo) => repo.id === id);
+  console.log(repository);
 
-  if (!repository) return response.status(400).send();
+  if (repository === -1) return response.status(400).send();
 
   const likes = repositories[repository].likes;
 
@@ -44,7 +46,7 @@ app.put("/repositories/:id", (request, response) => {
     title,
     url,
     techs,
-    likes
+    likes,
   };
   return response.json(repositories[repository]);
 });
@@ -54,9 +56,8 @@ app.delete("/repositories/:id", (request, response) => {
 });
 
 app.post("/repositories/:id/like", (request, response) => {
-  //TODO: should be able to like a repository
   const { id } = request.params;
-  const repository = repositories.find(repo => repo.id === id);
+  const repository = repositories.find((repo) => repo.id === id);
   if (!repository) return response.status(400).send();
   repository.likes += 1;
 
