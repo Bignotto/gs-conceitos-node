@@ -22,7 +22,7 @@ app.post("/repositories", (request, response) => {
     title,
     url,
     techs,
-    likes: 0,
+    likes: 0
   };
 
   repositories.push(repository);
@@ -30,15 +30,37 @@ app.post("/repositories", (request, response) => {
 });
 
 app.put("/repositories/:id", (request, response) => {
-  // TODO
+  const { title, url, techs } = request.body;
+  const { id } = request.params;
+
+  const repository = repositories.findIndex(repo => repo.id === id);
+
+  if (!repository) return response.status(400).send();
+
+  const likes = repositories[repository].likes;
+
+  repositories[repository] = {
+    id,
+    title,
+    url,
+    techs,
+    likes
+  };
+  return response.json(repositories[repository]);
 });
 
 app.delete("/repositories/:id", (request, response) => {
-  // TODO
+  //TODO: should be able to delete a repository
 });
 
 app.post("/repositories/:id/like", (request, response) => {
-  // TODO
+  //TODO: should be able to like a repository
+  const { id } = request.params;
+  const repository = repositories.find(repo => repo.id === id);
+  if (!repository) return response.status(400).send();
+  repository.likes += 1;
+
+  return response.json(repository);
 });
 
 module.exports = app;
